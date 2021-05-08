@@ -37,7 +37,7 @@ import pandas as pd
 from pandas import ExcelWriter
 from pandas import ExcelFile
 
-df = pd.read_excel('RawVoteData_05022021.xlsx')
+df = pd.read_excel('SanitizedVoteData_05022021.xlsx')
 
 #remember to check where the column starts.
 
