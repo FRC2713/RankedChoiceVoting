@@ -3,17 +3,19 @@
 Created on Mon May 18 19:28:01 2020
 
 @authors: ssainis, pmartel
-
+ Phil Martel is working on being able to read the voting file
+ and extract the incandidates and other needed info directly
+ 
 uses https://pypi.org/project/pyrankvote/ by Jon Tingvold
 """
 
 import pyrankvote 
 from pyrankvote import Candidate, Ballot
 
-# get name of vote file
+# get name of vote file using a open file dialog box
 import tkinter
 from tkinter import filedialog
-#tk = tkinter
+
 
 fd = filedialog
 
