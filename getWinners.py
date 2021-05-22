@@ -7,6 +7,7 @@ Created on Mon May 18 19:28:01 2020
 uses https://pypi.org/project/pyrankvote/ by Jon Tingvold
 Modifying to extract candiate data from vote file
 """
+import math
 from tkinter import filedialog
 
 import pyrankvote 
@@ -39,8 +40,8 @@ if __name__ == "__main__":
         except ValueError:
             status = 'Error: File ' + fileName + 'is not an Excel file'
         else :
-            print("Column Headings:")
-            print(df.columns)
+##            print("Column Headings:")
+##            print(df.columns)
             voterChoice = df[df.Timestamp.notnull()]
             columnHeaders = voterChoice.columns
             columnHeaders = columnHeaders.values.tolist()
@@ -51,13 +52,44 @@ if __name__ == "__main__":
             cSet = set()
             for v in ballotList :
                 cSet.update(v)
-
-            candidates = []
+            print("cset")
+            print(cSet)
+            candidateList = []
+            candidateName = []
             for c in cSet :
-                # should we treat nil/nan as a special case?
-                candidates.append(Candidate(c))
+                # treat nil/nan as a special case
+                if type(c) != type(1.) :  # this traps Not a Number
+                    candidateList.append(Candidate(c))
+                    candidateName.append(c)
             
-            
+            print("candidates")
+            print( candidateList )
+
+            ballots = []
+            for i in range(len(ballotList)) :
+                voter_ranking = []
+                b = ballotList[i]
+                for j in range(len(b)) :
+                    #There should be a better way
+                    for k in range(len(candidateList)) :
+                        if b[j] == candidateList[k].name :
+                            voter_ranking.append(candidateList[k])
+                            break
+                        continue
+                    if k == len(candidateList) :
+                        voter_ranking.append("")
+                    continue
+                
+                ballots.append(Ballot(ranked_candidates = voter_ranking))  
+                    
+            for b in ballots:
+                print(b)
+                
+        import multiple_seat_ranking_methods
+        election_result = pyrankvote.instant_runoff_voting(candidateList, ballots)
+
+        winners = election_result.get_winners()
+        print(election_result)
 
     print( status )
     
