@@ -159,7 +159,7 @@ def single_transferable_vote(
     voters, seats = manager.get_number_of_non_exhausted_ballots(), number_of_seats
     votes_needed_to_win: float = voters / float((seats + 1))  # Drop quota
 
-    print("Droop quota = {} votes\n".format(votes_needed_to_win))
+    print("Droop quota for {} seats = {} votes\n".format(number_of_seats, votes_needed_to_win))
 
     # Remove worst candidate until same number of candidates left as electable
     # While it is more candidates left than electable

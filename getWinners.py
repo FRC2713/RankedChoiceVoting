@@ -80,9 +80,7 @@ def runElection(numberOfCaptains):
                 
                 ballots.append(Ballot(ranked_candidates = voter_ranking))  
                     
-            print( "\nFound {} ballots".format(len(ballots)))
-            # for b in ballots:
-            #     print(b)
+            print( "\nFound {} ballots and {} candidates".format(len(ballots), len(candidateList)))
 
         election_result =\
         single_transferable_vote(
