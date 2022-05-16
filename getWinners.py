@@ -10,9 +10,15 @@ Modifying to extract candiate data from vote file
 import math
 from tkinter import filedialog
 from pyrankvote import Candidate, Ballot
+from multiple_seat_ranking_methods import *
+from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults
 import pandas as pd
+import argparse
 
-#
+parser = argparse.ArgumentParser(description="Run STV vote for n captains")
+parser.add_argument("-n", "--numberOfCaptains", help="The number of captains that you would like to elect.",default=3)
+
+
 # get name of vote file
 def  getFileName():
     
@@ -23,17 +29,19 @@ def  getFileName():
                                              ('All files','*.*')])
     return fileName
 
-##This runs if this code is run as a script
-if __name__ == "__main__":
+# run the election for the given number of captains to elect
+def runElection(numberOfCaptains):
     status = 'ok'
     fileName =getFileName()
+
+
     if fileName == '' :
-        status = 'Error: no file selected'
+        return 'Error: no file selected'
     else :
         try:
             df = pd.read_excel( fileName )
         except ValueError:
-            status = 'Error: File ' + fileName + 'is not an Excel file'
+            return 'Error: File ' + fileName + 'is not an Excel file'
         else :
             voterChoice = df[df.Timestamp.notnull()]
             columnHeaders = voterChoice.columns
@@ -45,8 +53,7 @@ if __name__ == "__main__":
             cSet = set()
             for v in ballotList :
                 cSet.update(v)
-            print("cset")
-            print(cSet)
+
             candidateList = []
             candidateName = []
             for c in cSet :
@@ -56,7 +63,7 @@ if __name__ == "__main__":
                     candidateName.append(c)
             
             print("\ncandidates")
-            print( candidateList )
+            print( candidateName )
 
             ballots = []
             for i in range(len(ballotList)) :
@@ -73,14 +80,9 @@ if __name__ == "__main__":
                 
                 ballots.append(Ballot(ranked_candidates = voter_ranking))  
                     
-            print( "\nballots")
-            for b in ballots:
-                print(b)
-                
-        from multiple_seat_ranking_methods import *
-        from pyrankvote.helpers import CompareMethodIfEqual, ElectionManager, ElectionResults
-
-        numberOfCaptains = 3
+            print( "\nFound {} ballots".format(len(ballots)))
+            # for b in ballots:
+            #     print(b)
 
         election_result =\
         single_transferable_vote(
@@ -91,5 +93,23 @@ if __name__ == "__main__":
         winners = election_result.get_winners()
         print(election_result)
 
-    print( status )
+        return "OK"
+
+
+## This runs if this code is run as a script
+if __name__ == "__main__":
+    status = 'OK'
+
+    args = parser.parse_args()
+    try:
+        numberOfCaptains = int(args.numberOfCaptains)
+        if numberOfCaptains <= 0 :
+            status = 'Error: invalid number of captains to elect.'
+        else :
+            status = runElection(numberOfCaptains)
+
+    except ValueError:
+        status = 'Error: must provide a number of captains to elect.'
+
+    print(status)
     
