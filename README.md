@@ -1,6 +1,6 @@
 # RankedChoiceVoting
-
-Run `python3 getWinners.py` and then select the voting data via file browser.
+1) Prepare an excel file with the votes (follow the format of `data/testData.xlxs`)
+2) Run `python3 getWinners.py` and then select the voting data via file browser.
 
 ```
 Usage: getWinners.py [-h] [-n NUMBEROFCAPTAINS]
